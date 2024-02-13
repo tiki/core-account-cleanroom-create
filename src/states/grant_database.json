@@ -1,0 +1,34 @@
+{
+  "GrantDatabase": {
+    "Type": "Task",
+    "Parameters": {
+      "Permissions": [
+        "DESCRIBE"
+      ],
+      "PermissionsWithGrantOption": [
+        "DESCRIBE"
+      ],
+      "Principal": {
+        "DataLakePrincipalIdentifier.$": "$.account"
+      },
+      "Resource": {
+        "Database": {
+          "Name.$": "$.database"
+        }
+      }
+    },
+    "Resource": "arn:aws:states:::aws-sdk:lakeformation:grantPermissions",
+    "Next": "GrantTable",
+    "ResultPath": null,
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "FallbackRevoke",
+        "ResultPath": "$.Error"
+      }
+    ]
+  }
+}

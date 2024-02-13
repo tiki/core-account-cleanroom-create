@@ -1,0 +1,21 @@
+{
+  "DropDatabase": {
+    "Type": "Task",
+    "Resource": "arn:aws:states:::athena:startQueryExecution",
+    "Parameters": {
+      "QueryString.$": "States.Format('DROP DATABASE {}', $.database)",
+      "WorkGroup": "${athena_workgroup}"
+    },
+    "Next": "TransformError",
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "TransformError",
+        "ResultPath": "$.Error"
+      }
+    ]
+  }
+}

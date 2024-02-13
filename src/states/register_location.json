@@ -1,0 +1,23 @@
+{
+  "RegisterLocation": {
+    "Type": "Task",
+    "Parameters": {
+      "ResourceArn.$": "States.Format('arn:aws:s3:::${cleanroom_bucket}/cleanroom/{}', $.database)",
+      "RoleArn": "${location_role}",
+      "HybridAccessEnabled": true
+    },
+    "Resource": "arn:aws:states:::aws-sdk:lakeformation:registerResource",
+    "ResultPath": null,
+    "Next": "GrantLocation",
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "DropDatabase",
+        "ResultPath": "$.Error"
+      }
+    ]
+  }
+}

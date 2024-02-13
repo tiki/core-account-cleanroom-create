@@ -1,0 +1,34 @@
+{
+  "GrantLocation": {
+    "Type": "Task",
+    "Parameters": {
+      "Permissions": [
+        "DATA_LOCATION_ACCESS"
+      ],
+      "PermissionsWithGrantOption": [
+        "DATA_LOCATION_ACCESS"
+      ],
+      "Principal": {
+        "DataLakePrincipalIdentifier.$": "$.account"
+      },
+      "Resource": {
+        "DataLocation": {
+          "ResourceArn.$": "States.Format('arn:aws:s3:::${cleanroom_bucket}/cleanroom/{}', $.database)"
+        }
+      }
+    },
+    "Resource": "arn:aws:states:::aws-sdk:lakeformation:grantPermissions",
+    "Next": "GrantDatabase",
+    "ResultPath": null,
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "DeregisterResource",
+        "ResultPath": "$.Error"
+      }
+    ]
+  }
+}

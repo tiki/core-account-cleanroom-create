@@ -1,0 +1,5 @@
+{
+  "Comment": "Create a new cleanroom",
+  "StartAt": "CreateDatabase",
+  "States": {}
+}

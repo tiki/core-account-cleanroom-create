@@ -1,0 +1,22 @@
+{
+  "CreateDatabase": {
+    "Type": "Task",
+    "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+    "Parameters": {
+      "QueryString.$": "States.Format('CREATE DATABASE {}', $.database)",
+      "WorkGroup": "${athena_workgroup}"
+    },
+    "Next": "RegisterLocation",
+    "ResultPath": null,
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "TransformError",
+        "ResultPath": "$.Error"
+      }
+    ]
+  }
+}

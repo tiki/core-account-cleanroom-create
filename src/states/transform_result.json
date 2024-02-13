@@ -1,0 +1,9 @@
+{
+  "TransformResult": {
+    "Type": "Pass",
+    "Next": "SendResult",
+    "Parameters": {
+      "requestId.$": "$.requestId"
+    }
+  }
+}

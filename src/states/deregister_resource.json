@@ -1,0 +1,11 @@
+{
+  "DeregisterResource": {
+    "Type": "Task",
+    "Next": "DropDatabase",
+    "Parameters": {
+      "ResourceArn.$": "States.Format('arn:aws:s3:::${cleanroom_bucket}/cleanroom/{}', $.database)"
+    },
+    "Resource": "arn:aws:states:::aws-sdk:lakeformation:deregisterResource",
+    "ResultPath": null
+  }
+}

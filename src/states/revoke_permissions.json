@@ -1,0 +1,42 @@
+{
+  "RevokePermissions": {
+    "Type": "Task",
+    "Next": "TransformResult",
+    "Parameters": {
+      "Permissions": [
+        "ALL",
+        "ALTER",
+        "CREATE_TABLE",
+        "DESCRIBE",
+        "DROP"
+      ],
+      "PermissionsWithGrantOption": [
+        "ALL",
+        "ALTER",
+        "CREATE_TABLE",
+        "DESCRIBE",
+        "DROP"
+      ],
+      "Principal": {
+        "DataLakePrincipalIdentifier": "${machine_role}"
+      },
+      "Resource": {
+        "Database": {
+          "Name.$": "$.database"
+        }
+      }
+    },
+    "Resource": "arn:aws:states:::aws-sdk:lakeformation:revokePermissions",
+    "Catch": [
+      {
+        "ErrorEquals": [
+          "States.ALL"
+        ],
+        "Comment": "catch all",
+        "Next": "TransformError",
+        "ResultPath": "$.Error"
+      }
+    ],
+    "ResultPath": null
+  }
+}

@@ -20,4 +20,4 @@ delete:
 
 clean:
 	rm -rf out
-	rm -rf infra/step_function
+	rm -rf infra/step_function/.aws-sam

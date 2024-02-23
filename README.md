@@ -59,7 +59,7 @@ Standard configuration parameters are provided the same way using the `--paramet
 - [AWS Athena](https://aws.amazon.com/athena/) for glue database creation.
 - [AWS Glue](https://aws.amazon.com/glue/) for database metadata catalog.
 - [AWS LakeFormation](https://aws.amazon.com/lake-formation/) for database access control.
-- [AWS LakeFormation](https://aws.amazon.com/step-functions/) for serverless event execution.
+- [AWS Step Functions](https://aws.amazon.com/step-functions/) for serverless event execution.
 
 ### Compile
 The project uses a composite JSON assembled at compile time.

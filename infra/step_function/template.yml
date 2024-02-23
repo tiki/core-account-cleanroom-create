@@ -54,6 +54,11 @@ Resources:
     Properties:
       LogGroupName: !Ref Name
       RetentionInDays: 30
+  Admin:
+    Type: AWS::LakeFormation::DataLakeSettings
+    Properties:
+      Admins:
+        - DataLakePrincipalIdentifier: !GetAtt Role.Arn
   Role:
     Type: AWS::IAM::Role
     Properties:
@@ -106,7 +111,9 @@ Resources:
                 Action:
                   - secretsmanager:GetSecretValue
                   - secretsmanager:DescribeSecret
-                Resource: !Sub arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:events!connection/${ApiAuthorization}
+                Resource: !Sub
+                  - arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:events!connection/${ApiAuthorizationName}/*
+                  - ApiAuthorizationName: !Select [0, !Split [ "/" , !Ref ApiAuthorization ] ]
               - Effect: Allow
                 Action: states:InvokeHTTPEndpoint
                 Resource: !Sub arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:*
@@ -179,4 +186,42 @@ Resources:
             Statement:
               - Effect: Allow
                 Resource: "*"
-                Action: lakeformation:GetDataAccess
+                Action:
+                  - lakeformation:GetDataAccess
+                  - lakeformation:RegisterResource
+                  - lakeformation:DeregisterResource
+                  - lakeformation:GrantPermissions
+                  - lakeformation:BatchGrantPermissions
+                  - lakeformation:RevokePermissions
+                  - lakeformation:BatchRevokePermissions
+        - PolicyName: PassRole
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: iam:PassRole
+                Resource:
+                  - !Ref LocationRole
+                Condition:
+                  StringEquals:
+                    iam:PassedToService:
+                      - lakeformation.amazonaws.com
+        - PolicyName: IAM
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: iam:GetRole
+                Resource:
+                  - !Ref LocationRole
+        - PolicyName: RAM
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ram:GetResourceShares
+                  - ram:AssociateResourceShare
+                  - ram:ListResourceSharePermissions
+                Resource:
+                  - !Sub arn:aws:ram:${AWS::Region}:${AWS::AccountId}:resource-share/*

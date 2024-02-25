@@ -32,9 +32,9 @@ jobs:
       - name: SAM Deploy Role
         run: |
           cd infra/deploy
-          sam build --parameter-overrides OceanAccount=${{ secrets.OCEAN_ACCOUNT  }}
+          sam build
           sam package
-          sam deploy --no-fail-on-empty-changeset --parameter-overrides OceanAccount=${{ secrets.OCEAN_ACCOUNT  }}
+          sam deploy --no-fail-on-empty-changeset
 
       - name: AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

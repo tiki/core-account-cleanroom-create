@@ -42,7 +42,6 @@ Standard configuration parameters are provided the same way using the `--paramet
 
 ### Required
 - **ApiAuthorization**: The EventBridge connection id (i.e. name/id)
-- **LocationRole**: The arn of the role to use for LakeFormation Data Access
 
 ### Optional
 - **Name**: The service name (lowercase pipecase). Default is core-account-cleanroom-create.

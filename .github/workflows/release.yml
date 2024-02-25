@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-    types:
-      - closed
+#    types:
+#      - closed
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   Deploy:
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
+#    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
     environment: Production
     permissions:
@@ -46,9 +46,9 @@ jobs:
       - name: SAM Deploy Step Function
         run: |
           make compile
-          make build flags="--parameter-overrides ApiAuthorization=${{ secrets.API_AUTHORIZATION }} LocationRole=${{ secrets.LOCATION_ROLE  }}"
+          make build flags="--parameter-overrides ApiAuthorization=${{ secrets.API_AUTHORIZATION }}"
           make package
-          make deploy flags="--parameter-overrides ApiAuthorization=${{ secrets.API_AUTHORIZATION }} LocationRole=${{ secrets.LOCATION_ROLE  }} --no-fail-on-empty-changeset"
+          make deploy flags="--parameter-overrides ApiAuthorization=${{ secrets.API_AUTHORIZATION }} --no-fail-on-empty-changeset"
 
       - name: Get Version
         id: semver

@@ -22,9 +22,6 @@ Parameters:
   ApiAuthorization:
     Description: The EventBridge connection id (i.e. name/id)
     Type: String
-  LocationRole:
-    Description: The arn of the role to use for LakeFormation Data Access
-    Type: String
 
 Resources:
   StateMachine:
@@ -37,7 +34,7 @@ Resources:
       DefinitionSubstitutions:
         athena_workgroup: !Ref Workgroup
         cleanroom_bucket: !Ref Bucket
-        location_role: !Ref LocationRole
+        location_role: !GetAtt LocationRole.Arn
         api_endpoint: !Ref ApiEndpoint
         api_authorization: !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:connection/${ApiAuthorization}
         machine_role: !GetAtt Role.Arn
@@ -200,8 +197,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: iam:PassRole
-                Resource:
-                  - !Ref LocationRole
+                Resource: !GetAtt LocationRole.Arn
                 Condition:
                   StringEquals:
                     iam:PassedToService:
@@ -212,8 +208,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: iam:GetRole
-                Resource:
-                  - !Ref LocationRole
+                Resource: !GetAtt LocationRole.Arn
         - PolicyName: RAM
           PolicyDocument:
             Version: 2012-10-17
@@ -225,3 +220,33 @@ Resources:
                   - ram:ListResourceSharePermissions
                 Resource:
                   - !Sub arn:aws:ram:${AWS::Region}:${AWS::AccountId}:resource-share/*
+  LocationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lake-formation-data-access
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              Service:
+                - lakeformation.amazonaws.com
+      Policies:
+        - PolicyName: RAM
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:DeleteObject
+                Resource: !Sub "arn:aws:s3:::${bucket}/*"
+              - Effect: Allow
+                Action: s3:ListAllMyBuckets
+                Resource: "arn:aws:s3:::*"
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !Sub "arn:aws:s3:::${bucket}"
+

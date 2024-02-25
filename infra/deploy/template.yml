@@ -87,7 +87,9 @@ Resources:
               - iam:DeleteRolePolicy
               - iam:AttachRolePolicy
               - iam:DetachRolePolicy
-            Resource: !Sub arn:aws:iam::${AWS::AccountId}:role/${StepFunction}
+            Resource:
+              - !Sub arn:aws:iam::${AWS::AccountId}:role/${StepFunction}
+              - !Sub arn:aws:iam::${AWS::AccountId}:role/lake-formation-data-access
           - Effect: Allow
             Action:
               - lakeformation:GrantPermissions

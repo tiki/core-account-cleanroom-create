@@ -15,8 +15,17 @@ Request (JSON)
   "database": "string"
 }
 ```
+Response (JSON) - `/api/latest/ocean/cleanroom/create`
 
-Response (JSON)
+- **requestId**: The unique identifier for the transaction.
+
+```json
+{
+  "requestId": "string"
+}
+```
+
+Error Response (JSON) - `/api/latest/ocean/error`
 
 - **requestId**: The unique identifier for the transaction.
 - **error**: An optional error if the transaction failed.

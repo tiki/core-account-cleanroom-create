@@ -218,6 +218,7 @@ Resources:
                   - ram:GetResourceShares
                   - ram:AssociateResourceShare
                   - ram:ListResourceSharePermissions
+                  - ram:CreateResourceShare
                 Resource:
                   - !Sub arn:aws:ram:${AWS::Region}:${AWS::AccountId}:resource-share/*
   LocationRole:
